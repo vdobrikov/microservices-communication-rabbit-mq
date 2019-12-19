@@ -5,11 +5,11 @@
     <parent>
         <groupId>com.vdobrikov.microservices.communication</groupId>
         <artifactId>rabbit</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
     <groupId>com.vdobrikov.microservices.communication.rabbit.facade</groupId>
     <artifactId>facade-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>facade-service</name>
     <description>Facade Web Service</description>
 

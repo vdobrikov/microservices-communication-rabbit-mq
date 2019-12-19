@@ -1,11 +1,13 @@
 package com.vdobrikov.microservices.communication.rabbit.messaging;
 
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @ToString
+@EqualsAndHashCode
 public class Wrapper {
     public final static String OBJECT = "object";
     public final static String OBJECT_CLASS = "objectClass";

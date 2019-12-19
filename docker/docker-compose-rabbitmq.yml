@@ -11,12 +11,15 @@ services:
     restart: on-failure
     ports:
       - "8080:8080"
+    environment:
+      - RABBITMQ_HOST=rabbit-mq
     depends_on:
       - rabbit-mq
   consumer-1:
     image: gcr.io/microservices-communication-rabbit/consumer-service:0.0.1-SNAPSHOT
     restart: on-failure
     environment:
+      - RABBITMQ_HOST=rabbit-mq
       - SUBSCRIBER_TOPIC=hello
     depends_on:
       - rabbit-mq
@@ -24,6 +27,7 @@ services:
     image: gcr.io/microservices-communication-rabbit/consumer-service:0.0.1-SNAPSHOT
     restart: on-failure
     environment:
+      - RABBITMQ_HOST=rabbit-mq
       - SUBSCRIBER_TOPIC=hello_fw
     depends_on:
       - rabbit-mq
@@ -31,6 +35,7 @@ services:
     image: gcr.io/microservices-communication-rabbit/consumer-forward-service:0.0.1-SNAPSHOT
     restart: on-failure
     environment:
+      - RABBITMQ_HOST=rabbit-mq
       - SUBSCRIBER_TOPIC=hello
     depends_on:
       - rabbit-mq

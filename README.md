@@ -1,6 +1,6 @@
-# microservices-communication-rabbit-mq
+# microservices-communication-event-sourcing
 
-Education project to learn microservices communications via RabbitMQ
+Education project to learn microservices communications via RabbitMQ / Kafka
 
 ## Build
 ```shell script
@@ -10,7 +10,10 @@ $ mvn clean package
 ## Run
 ```shell script
 $ cd docker
-$ docker-compose up 
+# Rabbit backed
+$ docker-compose -f docker-compose-rabbitmq.yml up
+# Kafka backed
+$ docker-compose -f docker-compose-kafka.yml up 
 ```
 
 ## Use
