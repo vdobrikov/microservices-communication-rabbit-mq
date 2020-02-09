@@ -3,12 +3,12 @@ package com.vdobrikov.microservices.communication.rabbit.messaging.rabbit;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
+import com.vdobrikov.microservices.communication.rabbit.messaging.Config;
 import com.vdobrikov.microservices.communication.rabbit.messaging.Subscriber;
 import com.vdobrikov.microservices.communication.rabbit.messaging.Wrapper;
 import com.vdobrikov.microservices.communication.rabbit.messaging.exception.MessagingClientException;
 import com.vdobrikov.microservices.communication.rabbit.messaging.exception.MessagingException;
 import com.vdobrikov.microservices.communication.rabbit.messaging.exception.MessagingMappingException;
-import com.vdobrikov.microservices.communication.rabbit.messaging.mapper.MessageMapper;
 import io.vavr.CheckedFunction2;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,16 +18,8 @@ import java.util.Objects;
 @Slf4j
 public class RabbitMQSubscriber extends RabbitMQTransport implements Subscriber {
 
-    public RabbitMQSubscriber(String hostname) {
-        super(hostname);
-    }
-
-    public RabbitMQSubscriber(String hostname, String exchangeName) {
-        super(hostname, exchangeName);
-    }
-
-    public RabbitMQSubscriber(String hostname, String exchangeName, MessageMapper messageMapper) {
-        super(hostname, exchangeName, messageMapper);
+    public RabbitMQSubscriber(Config config) {
+        super(config);
     }
 
     @Override

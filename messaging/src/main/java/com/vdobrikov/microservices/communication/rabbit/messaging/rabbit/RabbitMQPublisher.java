@@ -2,27 +2,19 @@ package com.vdobrikov.microservices.communication.rabbit.messaging.rabbit;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.BuiltinExchangeType;
-import com.vdobrikov.microservices.communication.rabbit.messaging.Wrapper;
+import com.vdobrikov.microservices.communication.rabbit.messaging.Config;
 import com.vdobrikov.microservices.communication.rabbit.messaging.Publisher;
+import com.vdobrikov.microservices.communication.rabbit.messaging.Wrapper;
 import com.vdobrikov.microservices.communication.rabbit.messaging.exception.MessagingClientException;
 import com.vdobrikov.microservices.communication.rabbit.messaging.exception.MessagingException;
-import com.vdobrikov.microservices.communication.rabbit.messaging.mapper.MessageMapper;
 
 import java.io.IOException;
 import java.util.Objects;
 
 public class RabbitMQPublisher extends RabbitMQTransport implements Publisher {
 
-    public RabbitMQPublisher(String hostname) {
-        super(hostname);
-    }
-
-    public RabbitMQPublisher(String hostname, String exchangeName) {
-        super(hostname, exchangeName);
-    }
-
-    public RabbitMQPublisher(String hostname, String exchangeName, MessageMapper messageMapper) {
-        super(hostname, exchangeName, messageMapper);
+    public RabbitMQPublisher(Config config) {
+        super(config);
     }
 
     @Override

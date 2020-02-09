@@ -3,6 +3,7 @@ package com.vdobrikov.microservices.communication.rabbit.messaging.rabbit;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.vdobrikov.microservices.communication.rabbit.messaging.Config;
 import com.vdobrikov.microservices.communication.rabbit.messaging.exception.MessagingException;
 import com.vdobrikov.microservices.communication.rabbit.messaging.mapper.JsonMessageMapper;
 import com.vdobrikov.microservices.communication.rabbit.messaging.mapper.MessageMapper;
@@ -17,10 +18,15 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import static com.vdobrikov.microservices.communication.rabbit.messaging.rabbit.RabbitMQConfig.RABBITMQ_DEFAULT_EXCHANGE;
+import static com.vdobrikov.microservices.communication.rabbit.messaging.rabbit.RabbitMQConfig.RABBITMQ_DEFAULT_EXCHANGE_VALUE;
+import static com.vdobrikov.microservices.communication.rabbit.messaging.rabbit.RabbitMQConfig.RABBITMQ_HOST;
+import static com.vdobrikov.microservices.communication.rabbit.messaging.rabbit.RabbitMQConfig.RABBITMQ_MESSAGE_MAPPER;
+import static com.vdobrikov.microservices.communication.rabbit.messaging.rabbit.RabbitMQConfig.RABBITMQ_MESSAGE_MAPPER_VALUE;
+
+
 @Slf4j
 public abstract class RabbitMQTransport implements Closeable {
-    private final static String DEFAULT_EXCHANGE_NAME = "default";
-    private static final Supplier<MessageMapper> DEFAULT_MESSAGE_MAPPER = JsonMessageMapper::new;
     private static final Supplier<RetryConfig> DEFAULT_RETRY_CONFIG = () -> RetryConfig.custom()
             .maxAttempts(Integer.MAX_VALUE)
 //            .retryOnException(e -> {log.warn("Retry on exception", e); return true;})
@@ -36,24 +42,16 @@ public abstract class RabbitMQTransport implements Closeable {
     private final CheckedFunction0<Connection> getConnectionFn;
     private final CheckedFunction0<Channel> getChannelFn;
 
-    public RabbitMQTransport(String hostname) {
-        this(hostname, DEFAULT_EXCHANGE_NAME);
-    }
-
-    public RabbitMQTransport(String hostname, String exchangeName) {
-        this(hostname, exchangeName, DEFAULT_MESSAGE_MAPPER.get());
-    }
-
-    public RabbitMQTransport(String hostname, String exchangeName, MessageMapper messageMapper) {
+    public RabbitMQTransport(Config config) {
+        String hostname = config.getString(RABBITMQ_HOST);
         Objects.requireNonNull(hostname, "'hostname' cannot be null");
-        Objects.requireNonNull(exchangeName, "'exchangeName' cannot be null");
-        Objects.requireNonNull(messageMapper, "'messageMapper' cannot be null");
 
-        this.exchangeName = exchangeName;
+        this.exchangeName = config.getStringOrDefault(RABBITMQ_DEFAULT_EXCHANGE, RABBITMQ_DEFAULT_EXCHANGE_VALUE);
+        this.messageMapper = config.getOrDefaultGet(RABBITMQ_MESSAGE_MAPPER, RABBITMQ_MESSAGE_MAPPER_VALUE);
+
         this.connectionFactory = createConnectionFactory(hostname);
         this.getConnectionFn = Retry.decorateCheckedSupplier(DEFAULT_RETRY.get(), () -> connectionFactory.newConnection());
         this.getChannelFn = Retry.decorateCheckedSupplier(DEFAULT_RETRY.get(), () -> createConnection().createChannel());
-        this.messageMapper = messageMapper;
     }
 
     protected Channel getChannel() throws MessagingException {
