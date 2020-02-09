@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  rabbit-mq:
+    image: rabbitmq:3-management
+    restart: on-failure
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  facade-publisher:
+    image: gcr.io/microservices-communication-rabbit/facade-service:0.0.1-SNAPSHOT
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - rabbit-mq
+  consumer-1:
+    image: gcr.io/microservices-communication-rabbit/consumer-service:0.0.1-SNAPSHOT
+    restart: on-failure
+    environment:
+      - SUBSCRIBER_TOPIC=hello
+    depends_on:
+      - rabbit-mq
+  consumer-2:
+    image: gcr.io/microservices-communication-rabbit/consumer-service:0.0.1-SNAPSHOT
+    restart: on-failure
+    environment:
+      - SUBSCRIBER_TOPIC=hello_fw
+    depends_on:
+      - rabbit-mq
+  consumer-publisher:
+    image: gcr.io/microservices-communication-rabbit/consumer-forward-service:0.0.1-SNAPSHOT
+    restart: on-failure
+    environment:
+      - SUBSCRIBER_TOPIC=hello
+    depends_on:
+      - rabbit-mq
